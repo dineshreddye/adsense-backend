@@ -81,7 +81,7 @@ Only return this format:
         print("RAW OpenAI Response:", response)
 
         if not response.choices or not response.choices[0].message:
-            return {"error": "Empty response from GPT."}
+            return JSONResponse(status_code=500, content={"error": "Empty response from GPT."})
 
         reply = response.choices[0].message.content.strip()
         print("GPT Rewritten Ad Response:", reply)
@@ -91,12 +91,12 @@ Only return this format:
         elif reply.startswith("```"):
             reply = reply.replace("```", "").strip()
 
-        return json.loads(reply)
+        return JSONResponse(content=json.loads(reply))
 
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return {"error": f"Failed to parse GPT response: {e}"}
+        return JSONResponse(status_code=500, content={"error": "Empty response from GPT."})
 
 
 router = rewrite_router

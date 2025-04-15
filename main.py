@@ -3,6 +3,7 @@ import base64
 import json
 import openai
 from fastapi import FastAPI, UploadFile, File, Form, APIRouter
+from analyze_with_gemini import gemini_router  
 from rewrite_ad_with_gpt import router as rewrite_router
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
@@ -11,6 +12,8 @@ from api import API_KEY
 
 app = FastAPI()
 app.include_router(rewrite_router)
+app.include_router(gemini_router)  # ✅ Add this
+
 
 app.add_middleware(
     CORSMiddleware,

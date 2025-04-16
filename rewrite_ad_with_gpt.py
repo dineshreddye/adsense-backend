@@ -1,35 +1,26 @@
 import io
 import base64
 import json
-from fastapi import FastAPI, UploadFile, File, Form, APIRouter
-from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Optional
-from newspaper import Article
 import openai
+from fastapi import APIRouter, Form
+from fastapi.responses import JSONResponse
+from newspaper import Article
 from api import API_KEY
 
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
+# Set OpenAI API key
 openai.api_key = API_KEY
 
+# Create FastAPI router
 rewrite_router = APIRouter()
 
-
+# Helper to fetch article content
 def get_article_text(url: str) -> str:
     article = Article(url)
     article.download()
     article.parse()
     return article.text
 
-
+# Ad rewriting endpoint
 @rewrite_router.post("/rewrite_ad_with_gpt")
 async def rewrite_ad_with_gpt(
     url: str = Form(...),
@@ -40,7 +31,7 @@ async def rewrite_ad_with_gpt(
     try:
         article_text = get_article_text(url)
     except Exception as e:
-        return {"error": f"Failed to fetch article: {e}"}
+        return JSONResponse(status_code=400, content={"error": f"Failed to fetch article: {e}"})
 
     user_ad = f"Headline: {headline}\nDescription: {description}\nPrimary Text: {primary_text}"
 
@@ -67,7 +58,7 @@ Only return this format:
 """
 
     try:
-        print("✅ Article loaded, preparing to call GPT")
+        print("✅ Sending to GPT...")
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
@@ -78,14 +69,9 @@ Only return this format:
             temperature=0.7
         )
 
-        print("RAW OpenAI Response:", response)
-
-        if not response.choices or not response.choices[0].message:
-            return JSONResponse(status_code=500, content={"error": "Empty response from GPT."})
-
         reply = response.choices[0].message.content.strip()
-        print("GPT Rewritten Ad Response:", reply)
 
+        # Clean up any formatting
         if reply.startswith("```json"):
             reply = reply.replace("```json", "").replace("```", "").strip()
         elif reply.startswith("```"):
@@ -96,8 +82,7 @@ Only return this format:
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return JSONResponse(status_code=500, content={"error": "Empty response from GPT."})
+        return JSONResponse(status_code=500, content={"error": "Failed to process GPT response."})
 
-
+# ✅ Export the router
 router = rewrite_router
-app.include_router(router)

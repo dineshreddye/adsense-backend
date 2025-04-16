@@ -7,19 +7,17 @@ from newspaper import Article
 from typing import List, Optional
 from api import GEMINI_API_KEY
 
-
+# Gemini API router
 gemini_router = APIRouter()
 
 GEMINI_MODEL = "gemini-1.5-pro-002"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
-
 
 def get_article_text(url: str) -> str:
     article = Article(url)
     article.download()
     article.parse()
     return article.text
-
 
 def encode_image_to_base64(image_file: UploadFile) -> dict:
     image_data = image_file.file.read()
@@ -30,7 +28,6 @@ def encode_image_to_base64(image_file: UploadFile) -> dict:
             "data": base64_image
         }
     }
-
 
 @gemini_router.post("/analyze_with_gemini")
 async def analyze_with_gemini(
@@ -53,7 +50,7 @@ You are an expert in AdSense compliance and ad relevance checking.
 Given the article:
 "/"/"/
 {article_text[:3000]}
-"/"/"
+"/"/"/
 
 And the following ad:
 {ad_text}
@@ -99,7 +96,6 @@ Only return the JSON object — no explanation or markdown.
         raw_text = response.json()["candidates"][0]["content"]["parts"][0]["text"]
         print("✅ Gemini response received:", json.dumps(response.json(), indent=2))
 
-        # Remove markdown formatting
         if raw_text.startswith("```json"):
             raw_text = raw_text.replace("```json", "").replace("```", "").strip()
         elif raw_text.startswith("```"):

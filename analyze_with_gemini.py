@@ -5,10 +5,14 @@ from fastapi import APIRouter, Form, File, UploadFile
 from fastapi.responses import JSONResponse
 from newspaper import Article
 from typing import List, Optional
-from api import GEMINI_API_KEY
+import os
+from dotenv import load_dotenv
 
 # Gemini API router
 gemini_router = APIRouter()
+
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 GEMINI_MODEL = "gemini-1.5-pro-002"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"

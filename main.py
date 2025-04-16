@@ -8,7 +8,7 @@ from rewrite_ad_with_gpt import router as rewrite_router
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from newspaper import Article
-from api import API_KEY
+import os
 
 app = FastAPI()
 app.include_router(rewrite_router)
@@ -23,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-openai.api_key = API_KEY
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 rewrite_router = APIRouter()
 

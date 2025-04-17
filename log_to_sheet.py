@@ -1,6 +1,7 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
+import json
 
 # Define the scope and credentials
 scope = [
@@ -10,7 +11,8 @@ scope = [
 
 # Load the credentials
 try:
-    creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+    creds_json = json.loads(os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON"))
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
     client = gspread.authorize(creds)
     SHEET_NAME = "Compliance"  # Change this to your actual sheet name
     sheet = client.open(SHEET_NAME).sheet1

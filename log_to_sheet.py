@@ -1,7 +1,8 @@
 import gspread
+import json
+import os  # <-- ✅ Needed to access environment variable
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
-import json
 
 # Define the scope and credentials
 scope = [
@@ -14,7 +15,7 @@ try:
     creds_json = json.loads(os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON"))
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
     client = gspread.authorize(creds)
-    SHEET_NAME = "Compliance"  # Change this to your actual sheet name
+    SHEET_NAME = "Compliance"  # 👈 make sure this matches your sheet name
     sheet = client.open(SHEET_NAME).sheet1
 except Exception as e:
     print("❌ Failed to connect to Google Sheets:", e)

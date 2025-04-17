@@ -28,12 +28,16 @@ def log_ad_check(data: dict):
         return
 
     try:
+
+        headlines = data.get("headline", [])
+        descriptions = data.get("description", [])
+        
         row = [
             datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
             data.get("source", ""),
             data.get("url", ""),
-            data.get("headline", ""),
-            data.get("description", ""),
+            "\n".join(headlines) if isinstance(headlines, list) else headlines,
+            "\n".join(descriptions) if isinstance(descriptions, list) else descriptions,
             data.get("primary_text", ""),
             data.get("keywords", ""),
             data.get("image_count", 0),

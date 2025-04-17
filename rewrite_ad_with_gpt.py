@@ -5,7 +5,12 @@ import openai
 from fastapi import APIRouter, Form
 from fastapi.responses import JSONResponse
 from newspaper import Article
-from api import API_KEY
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+API_KEY = os.getenv("OPENAI_API_KEY")
+
 
 # Set OpenAI API key
 openai.api_key = API_KEY

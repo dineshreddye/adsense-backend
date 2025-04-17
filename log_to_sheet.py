@@ -16,7 +16,8 @@ try:
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
     client = gspread.authorize(creds)
     SHEET_NAME = "Compliance"  # 👈 make sure this matches your sheet name
-    sheet = client.open(SHEET_NAME).sheet1
+    sheet = client.open(SHEET_NAME).worksheet("logs")
+
 except Exception as e:
     print("❌ Failed to connect to Google Sheets:", e)
     sheet = None

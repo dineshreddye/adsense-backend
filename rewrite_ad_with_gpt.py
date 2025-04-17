@@ -5,12 +5,10 @@ import openai
 from fastapi import APIRouter, Form
 from fastapi.responses import JSONResponse
 from newspaper import Article
-import os
-from dotenv import load_dotenv
+from api import API_KEY
 
 # Set OpenAI API key
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
+openai.api_key = API_KEY
 
 # Create FastAPI router
 rewrite_router = APIRouter()

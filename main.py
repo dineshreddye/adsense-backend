@@ -25,7 +25,6 @@ app.add_middleware(
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-rewrite_router = APIRouter()
 
 
 def get_article_text(url: str) -> str:

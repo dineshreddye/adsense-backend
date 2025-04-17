@@ -1,34 +1,38 @@
-# Python
+# =========================
+# 🐍 Python / FastAPI
+# =========================
 __pycache__/
 *.py[cod]
 *.egg
 *.egg-info/
 dist/
 build/
-.env
-.env.*  # In case you use .env.local or others
 venv/
 *.sqlite3
-
-# FastAPI logs
 *.log
+.env
+.env.*  # e.g. .env.local, .env.production
 
-# VS Code
-.vscode/
-
-# macOS
-.DS_Store
-
-# Node
-frontend/node_modules/
-frontend/build/
-frontend/.env
-frontend/.env.*  # just in case
-
-# Coverage / Testing
+# =========================
+# 📦 Dependencies / Testing
+# =========================
 htmlcov/
 .coverage
 .tox/
 .nox/
 .cache/
 pytest_cache/
+
+# =========================
+# 💻 VS Code / Editor files
+# =========================
+.vscode/
+.DS_Store
+
+# =========================
+# ⚛️ Frontend (React / Node)
+# =========================
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.env.*
